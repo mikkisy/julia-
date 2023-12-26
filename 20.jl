@@ -1,15 +1,20 @@
-using HorizonSideRobots
-
-clockwise( side :: HorizonSide) = HorizonSide(mod(Int(side)+1,4))
-
-anticlockwise( side :: HorizonSide) = HorizonSide(mod(Int(side)+3,4))
-
-function avoid!(r :: Robot, side :: HorizonSide) 
-    if !isborder(r,side)
-        move!(r,side)
+function backside(side)
+    if side == Nord 
+        return Sud
+    elseif side == Sud 
+        return Nord
+    elseif side == West
+        return Ost
     else
-        move!(r,clockwise(side))
-        avoid!(r,side)
-        move!(r,anticlockwise(side))
+        return West 
+    end
+end
+
+function along_rec!(robot, side)
+    if isborder(robot, side) putmarker!(robot)
+    else
+        move!(robot, side)
+        along_rec!(robot, side)
+        move!(robot, backside(side))
     end
 end
