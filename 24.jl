@@ -1,21 +1,28 @@
-using HorizonSideRobots
-function step!( r :: Robot, side :: HorizonSide)
-    isborder(r,side) && return
-    move!(r,side)
-    paint_step!(r,side)
-end
-
-function paint_step!(r :: Robot, side :: HorizonSide)
-    putmarker!(r)
-    isborder(r,side) && return
-    move!(r,side)
-    step!(r,side)
-end
-
-function linechess!(r :: Robot, side :: HorizonSide; markstart=false)
-    if markstart
-        paint_step!(r,side) 
-    else 
-        step!(r,side) 
+function backside(side)
+    if side == Nord 
+        return Sud
+    elseif side == Sud 
+        return Nord
+    elseif side == West
+        return Ost
+    else
+        return West 
     end
+end
+ 
+function rec1!(robot, side)
+    if !isborder(robot, side)
+        move!(robot, side)
+        rec2!(robot, side)
+        move!(robot, backside(side))
+    end
+    return
+end
+ 
+function rec2!(robot, side)
+    if !isborder(robot, side)
+        move!(robot, side)
+        rec1!(robot, side)
+    end
+    return
 end
