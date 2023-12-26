@@ -1,18 +1,17 @@
-using HorizonSideRobots
-include("functions.jl")
-include("structs.jl")
-
-r = Robot(animate = true)
-
-
-function spiral!(stop_condition::Function, robot)
-    n = 2
-    side = Nord
-    while !stop_condition()
-        num_steps_along!(stop_condition, robot, side, div(n, 2))
-        n += 1
-        side = right(side)
+function along!(stop_condition::Function, robot, side, k)
+    for i in 1:k
+        if stop_condition(robot) return end
+        move!(robot, side)
     end
 end
-
-spiral!(() -> ismarker(r), r)
+ 
+function spiral!(stop_condition::Function, robot)
+    k = 1
+    while !stop_condition(robot)
+        along!(stop_condition, robot, Nord, k)
+        along!(stop_condition, robot, Ost, k)
+        along!(stop_condition, robot, Sud, k + 1)
+        along!(stop_condition, robot, West, k + 1)
+        k += 2
+    end
+end
