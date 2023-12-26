@@ -1,20 +1,32 @@
-include("robot.jl")
-include("functions.jl")
-function mark_cross!(robot)::Nothing
+function result!(robot):Nothing
+    a = 0
     putmarker!(robot)
-    for side in 0:3
-        line_markings!(robot, HorizonSide(side))
-    end
-end
-
-function line_markings!(robot, direction)
-    local num_steps = 0
-    while !isborder(robot, direction)
-        move!(robot, direction)
-        num_steps += 1
+    while !isborder(robot, Nord)
+        move!(robot, Nord)
         putmarker!(robot)
+        a -= 1
     end
-    along!(robot, inverse(direction), num_steps)
+    while !isborder(robot, Sud)
+        move!(robot, Sud)
+        putmarker!(robot)
+        a += 1
+    end
+    while a > 0
+        move!(robot, Nord)
+        a -= 1
+    end
+    while !isborder(robot, West)
+        move!(robot, West)
+        putmarker!(robot)
+        a -= 1
+    end
+    while !isborder(robot, Ost)
+        move!(robot, Ost)
+        putmarker!(robot)
+        a += 1
+    end
+    while a > 0
+        move!(robot, West)
+        a -= 1
+    end
 end
-
-print(mark_cross!(r))
