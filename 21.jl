@@ -1,15 +1,20 @@
-using HorizonSideRobots
+function backside(side)
+    if side == Nord 
+        return Sud
+    elseif side == Sud 
+        return Nord
+    elseif side == West
+        return Ost
+    else
+        return West 
+    end
+end
 
-inverse( side :: HorizonSide ) = HorizonSide( mod( Int( side ) +2 ,4 ) )
-
-function twice!(r :: Robot, side :: HorizonSide)
-    if !isborder(r,side)
-        move!(r,side)
-        twice!(r,side)
-        for i in 1:2
-            if isborder(r,inverse(side)) return false end
-            move!(r,inverse(side))
-        end
-        return true
+function along_rec!(robot, side1, side2 = ((side1 == Nord) || (side1 == Sud)) ? West : Nord)
+    if isborder(robot, side1)
+        move!(robot, side2)
+        along_rec!(robot, side1)
+        move!(robot, backside(side2))
+    else move!(robot, side1) 
     end
 end
