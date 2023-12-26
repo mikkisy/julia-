@@ -1,35 +1,54 @@
-using HorizonSideRobots
-
-function collibrate(r :: Robot; track=true)
-    arr=()
-    while !isborder(r,Sud) || !isborder(r,West)
-        if !isborder(r,Sud) move!(r,Sud); arr=(Nord, arr...) end
-        if !isborder(r,West) move!(r,West); arr=(Ost, arr...) end
+function check(robot, x, y, r):nothing
+    fl1 = (x % (2 * r) < r)
+    fl2 = (abs(y) % (2 * r) < r)
+    if fl1 == fl2
+        putmarker!(robot)
     end
-    if track return arr end
 end
-
-gohome!(r :: Robot, arr :: NTuple) = for side in arr move!(r,side) end
-
-function go!(r :: Robot, side :: HorizonSide, steps :: Int, ind :: Int)
-    while steps>0 && !isborder(r,side)
-        if mod(steps,2)==ind putmarker!(r) end
-        move!(r,side)
-        steps-=1
+ 
+function go_back(robot, x, y):nothing
+    while x > 0
+        move!(robot, West)
+        x -= 1
     end
-    if mod(steps,2)==ind putmarker!(r) end
+    while y < 0
+        move!(robot, Nord)
+        y += 1
+    end
 end
-
-
-function cutchess!(r :: Robot,n :: Int)
-    arr=collibrate(r)
-    side=Ost
-    ind= mod(n+1,2)
-    for i in 1:n
-        go!(r,side,n-1,ind+mod(n,2)*0^mod(i,2))
-        if isborder(r,Nord) break end; move!(r,Nord)
-        side=inverse(side)
+ 
+function result(robot, r):nothing
+    x = 0
+    y = 0
+    while !isborder(robot, West)
+        move!(robot, West)
     end
-    collibrate(r;track=false)
-    gohome!(r,arr)
+    while !isborder(robot, Nord)
+        move!(robot, Nord)
+    end
+ 
+    check(robot, x, y, r)
+    dir = Ost
+    while (!isborder(robot, Ost) || !isborder(robot, Sud))
+        while !isborder(robot, dir)
+            move!(robot, dir)
+            if dir == Ost
+                x += 1
+            else
+                x -= 1
+            end
+            check(robot, x, y, r)
+        end
+        if !isborder(robot, Sud)
+            move!(robot, Sud)
+            y -= 1
+            check(robot, x, y, r)
+        end
+        if dir == Ost
+            dir = West
+        else
+            dir = Ost
+        end
+    end
+    go_back(robot, x, y)
 end
