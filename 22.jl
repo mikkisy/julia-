@@ -1,19 +1,23 @@
 using HorizonSideRobots
-
-inverse(side :: HorizonSide) = HorizonSide(mod(Int(side)+2,4))
-
-function recursive_along!(r :: Robot, side :: HorizonSide) 
-    isborder(r,side) && return
-    move!(r,side)
-    recursive_along!(r, side)
-end
-
-function symmetric!(r :: Robot, side :: HorizonSide)
-    if !isborder(r,side)
-        move!(r,side)
-        symmetric!(r,side)
-        move!(r,side)
+r = Robot(animate = true)
+ 
+function backside(side)
+    if side == Nord 
+        return Sud
+    elseif side == Sud 
+        return Nord
+    elseif side == West
+        return Ost
     else
-        recursive_along!(r,inverse(side))
+        return West 
+    end
+end
+ 
+function task22!(r, side)
+    if isborder(r, side) == 0
+        move!(r, side)
+        task22!(r, side)
+        move!(r, backside(side))
+        move!(r, backside(side))
     end
 end
