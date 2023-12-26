@@ -1,18 +1,22 @@
-using HorizonSideRobots
-
-inverse(side :: HorizonSide) = HorizonSide(mod(Int(side)+2,4))
-
-function half!(r :: Robot, side :: HorizonSide)
-    if !isborder(r,side)
-        move!(r,side)
+function backside(side)
+    if side == Nord 
+        return Sud
+    elseif side == Sud 
+        return Nord
+    elseif side == West
+        return Ost
     else
-        return 
+        return West 
     end
-    if !isborder(r,side)
-        move!(r,side)
-        half!(r,side)
-        move!(r,inverse(side))
-    else
-        return 
-    end
+end
+ 
+function do_simmetry!(robot, side, flag = false)
+    if !isborder(robot, side) && !flag
+        move!(robot, side)
+        do_simmetry!(robot, side)
+        move!(robot, side)
+    elseif !isborder(robot, backside(side))
+        move!(robot, backside(side))
+        do_simmetry!(robot, side, true)
+    else return end
 end
