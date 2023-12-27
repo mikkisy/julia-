@@ -1,4 +1,4 @@
-function check(robot, x, y, r):nothing
+function check(robot, x, y, r)
     fl1 = (x % (2 * r) < r)
     fl2 = (abs(y) % (2 * r) < r)
     if fl1 == fl2
@@ -6,7 +6,7 @@ function check(robot, x, y, r):nothing
     end
 end
  
-function go_back(robot, x, y):nothing
+function go_back(robot, x, y)
     while x > 0
         move!(robot, West)
         x -= 1
@@ -17,7 +17,7 @@ function go_back(robot, x, y):nothing
     end
 end
  
-function result(robot, r):nothing
+function result(robot, r)
     x = 0
     y = 0
     while !isborder(robot, West)
