@@ -1,4 +1,7 @@
-
+function dmove!(r, side1, side2)
+    move!(r, side1)
+    move!(r, side2)
+end 
 function diagonalalongandback!(r, Side1, Side2, Side3, Side4)
     while !isborder(r, Side1) && !isborder(r, Side2)
         dmove!(r, Side1, Side2)
