@@ -1,54 +1,22 @@
-function check(robot, x, y):nothing
-    if ((x + y) % 2 == 0)
-        putmarker!(robot)
+function find_marker!(robot)
+    num_step=1
+    side=Nord
+    while !ismarker(robot)
+        for _i in 1:2   
+            marker_is_find!(robot ,side, num_step)
+            side=next(side)
+        end
+        num_step=num_step+1
     end
 end
- 
-function move_two_sides(robot, x, y):nothing
-    while x > 0
-        move!(robot, West)
-        x -= 1
-    end
-    while y < 0
-        move!(robot, Nord)
-        y += 1
-    end
-end
- 
-function result(robot):nothing
-    x = 0
-    y = 0
-    while !isborder(robot, West)
-        move!(robot, West)
-        x -= 1
-    end
-    while !isborder(robot, Nord)
-        move!(robot, Nord)
-        y += 1
-    end
- 
-    check(robot, x, y)
-    dir = Ost
-    while (!isborder(robot, Ost) || !isborder(robot, Sud))
-        while !isborder(robot, dir)
-            move!(robot, dir)
-            if dir == Ost
-                x += 1
-            else
-                x -= 1
-            end
-            check(robot, x, y)
-        end
-        if !isborder(robot, Sud)
-            move!(robot, Sud)
-            y -= 1
-            check(robot, x, y)
-        end
-        if dir == Ost
-            dir = West
+
+function marker_is_find!(robot, side, num_step)  
+    for _i in 1:num_step   
+        if !ismarker(r)
+            move!(robot,side)
         else
-            dir = Ost
-        end
+            break
+        end 
     end
-    move_two_sides(robot, x, y)
 end
+next(side::HorizonSide) = HorizonSide((Int(side) +1)% 4)
