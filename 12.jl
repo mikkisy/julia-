@@ -1,54 +1,50 @@
-function move_two_sides(robot, x, y):nothing
-    while y < 0
-        move!(robot, Nord)
-        y += 1
-    end
-    while x > 0
-        move!(robot, West)
-        x -= 1
-    end
-end
- 
-function result(robot):nothing
-    x = 0
-    y = 0
-    while !isborder(robot, West)
-        move!(robot, West)
-        x -= 1
-    end
-    while !isborder(robot, Nord)
-        move!(robot, Nord)
-        y += 1
-    end
-    cnt = 0
-    dir = Ost
-    flag = false
-    while (!isborder(robot, Ost) || !isborder(robot, Sud))
-        if flag cnt += 1 end
-        flag = false
-        delay = 0
-        while !isborder(robot, dir)
-            move!(robot, dir)
-            if dir == Ost x += 1
-            else x -= 1 end
-            if isborder(robot, Sud)
-                flag = true
-                delay = 0
-            else 
-                delay += 1
-                if (flag && delay > 1) 
-                    cnt += 1
-                    flag = false 
-                end 
+using HorizonSideRobots
+r=Robot("12.sit"; animate=true)
+function count_partitions(robot)
+    side = Ost
+    count = 0
+    count_check = 0
+    count_blank = 0
+    count_total = 0
+    while !isborder(robot, side)
+        move!(robot, side)
+        if isborder(robot, Nord)
+            count_blank = 0
+            count += 1;
+            count_check += 1
+        elseif !isborder(robot, Nord) 
+            count_blank += 1
+            if (count_blank <= 1) 
+                count += 1;
+                count_check += 1
+            else
+                if (count == 0 || count_check == 0)
+                    count_total += 0
+                else 
+                    count_total += count / count_check
+                    count = 0
+                    count_check = 0
+                end
             end
         end
-        if !isborder(robot, Sud)
-            move!(robot, Sud)
-            y -= 1
+        if isborder(robot, side) && !isborder(robot, Nord)
+            if (count_blank <= 1)
+                if (count == 0 || count_check == 0)
+                    count_total += 0
+                else 
+                    count_total += count / count_check
+                    count = 0
+                    count_check = 0
+                end
+            end
+            move!(robot, Nord)
+            side = inverse(side)
+            count = 0
+            count_check = 0
         end
-        if dir == Ost dir = West
-        else dir = Ost end
     end
-    print(cnt)
-    move_two_sides(robot, x, y)
+    return count_total
 end
+
+inverse(side::HorizonSide) = HorizonSide((Int(side) +2)% 4)
+count_partitions(r)
