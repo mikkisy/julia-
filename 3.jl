@@ -1,66 +1,41 @@
-function tocorner!(r, Side1, Side2)
-    while !isborder(r, Side1)
-        move!(r, Side1)
-    end
-    while !isborder(r, Side2)
-        move!(r, Side2)
-    end
-end
+using HorizonSideRobots
 
-function goandmark!(r, Side)
-    while !isborder(r, Side)
-        putmarker!(r)
-        move!(r, Side)
-    end
-end
+r=Robot(15,15; animate=true)
 
-function task3!(r)
-	Side1 = Nord
-	Side2 = Ost
-	Side3 = Sud 
-	Side4 = West
-    d = 1
-    a = 0
-    b = 0
-    while !isborder(r, Side1)
-        move!(r, Side1)
-        a += 1
-    end
-    while !isborder(r, Side2)
-        move!(r, Side2)
-        b += 1
-    end
- 
-    while isborder(r, Side4)==0
-        if d % 2 == 1
-            goandmark!(r, Side3)
-            putmarker!(r)
-            move!(r, Side4)
-        end
-        if d % 2 == 0
-            goandmark!(r, Side1)
-            putmarker!(r)
-            move!(r, Side4)
-        end
-        d += 1
- 
-    end
-    if !isborder(r, Side3)
-        goandmark!(r, Side3)
+#ЭТОТ ВСЁ ПОЛЕ КРАСИТ
+function spiralka()
+    hz = 3
+    while true
+
+    if ismarker(r)==false
+    if isborder(r,HorizonSide(hz))==false
         putmarker!(r)
-    else
-        goandmark!(r, Side1)
-        putmarker!(r)
+        move!(r,HorizonSide(hz))
+    elseif (hz == 3)
+        hz = 0
+    elseif (hz == 0)
+        hz = 1
+    elseif (hz == 1)
+        hz = 2
+    end
+    elseif (hz == 2)
+        move!(r,HorizonSide(0))
+        move!(r,HorizonSide(3))
+        hz = 3
+    elseif (hz == 3)
+        move!(r,HorizonSide(1))
+        move!(r,HorizonSide(0))
+        hz = 0
+    elseif (hz == 0)
+        move!(r,HorizonSide(2))
+        move!(r,HorizonSide(1))
+        hz = 1
+    elseif (hz == 1)
+        move!(r,HorizonSide(3))
+        move!(r,HorizonSide(2))
+        hz = 2
     end
 
-    tocorner!(r, Side1, Side2)
- 
-    while a != 0
-        move!(r, Side3)
-        a -= 1
-    end
-    while b != 0
-        move!(r, Side4)
-        b -= 1
     end
 end
+spiralka()
