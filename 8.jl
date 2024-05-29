@@ -1,41 +1,26 @@
-function task8!(r, Side1, Side2, Side3, Side4)
-    i = 1
-    while !ismarker(r) == 1
-        a = i
-        if i % 2 == 1
-            while a != 0
-                move!(r, Side2)
-                if ismarker(r)
-                    break
-                end
-                a -= 1
-            end
-            a = i
-            while a != 0
-                move!(r, Side1)
-                if ismarker(r)
-                    break
-                end
-                a -= 1
-            end
-        else
- 
-            while a != 0
-                move!(r, Side4)
-                if ismarker(r)
-                    break
-                end
-                a -= 1
-            end
-            a = i
-            while a != 0
-                move!(r, Side3)
-                if ismarker(r)
-                    break
-                end
-                a -= 1
-            end
-        end
-        i += 1
+function find_marker!(robot) 
+    k=0
+    side=Nord
+    while (!ismarker(robot))
+      for _i in 1:2
+        along!(side,k,robot)
+        side=right(side)
+      end
+      k+=1
     end
-end
+  end
+  
+  function along!(side,num_steps,robot)
+    for _i in 1:num_steps
+      if (!ismarker(robot))
+        move!(robot,side)
+      end
+    end
+  end
+  
+  
+  function solve!(robot)
+  find_marker!(robot)
+  end
+  
+  right(side::HorizonSide)::HorizonSide = HorizonSide(mod(Int(side)+1, 4))
