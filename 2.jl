@@ -1,36 +1,23 @@
-function goandmark!(r, Side)
-    while !isborder(r, Side)
+using HorizonSideRobots
+
+r=Robot(15,15; animate=true)
+
+#ЭТО ГРАНИЦУ СТРОИТ
+function gobok(r::Robot)
+    while isborder(r,HorizonSide(3))==false
+    move!(r,HorizonSide(3))
+    end
+end
+function buildp(r::Robot) 
+hz = 0
+while hz < 4 
+    if isborder(r,HorizonSide(hz))==false
+        move!(r,HorizonSide(hz))
         putmarker!(r)
-        move!(r, Side)
+    else
+        hz += 1
     end
 end
- 
- 
-function task2!(r, Side1, Side2, Side3, Side4)
-	Side1 = Nord
-	Side2 = Ost
-	Side3 = Sud 
-	Side4 = West
-    a = 0
-    b = 0
-    while !isborder(r, Side1)
-        move!(r, Side1)
-        a += 1
-    end
-    while !isborder(r, Side2)
-        move!(r, Side2)
-        b += 1
-    end
-    goandmark!(r, Side3)
-    goandmark!(r, Side4)
-    goandmark!(r, Side1)
-    goandmark!(r, Side2)
-    while a != 0
-        move!(r, Side3)
-        a -= 1
-    end
-    while b != 0
-        move!(r, Side4)
-        b -= 1
-    end
 end
+gobok(r)
+buildp(r)
