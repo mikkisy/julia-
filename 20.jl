@@ -1,13 +1,15 @@
-using HorizonSideRobots
-function moveNext!(robot, side)
-    if !isborder(robot, side)
-        move!(robot, side)
-    else
-        move!(robot, right(side))
-        moveNext!(robot, side)
-        move!(robot, left(side))
+function inverse(side)
+    if side == Nord return Sud
+    elseif side == Sud return Nord
+    else return side == West ? Ost : West
     end
 end
 
-right(side::HorizonSide) = HorizonSide((Int(side) +1)% 4)
-left(side::HorizonSide) = HorizonSide((Int(side) +3)% 4)
+function along_rec!(robot, side)
+    if isborder(robot, side) putmarker!(robot)
+    else
+        move!(robot, side)
+        along_rec!(robot, side)
+        move!(robot, inverse(side))
+    end
+end
